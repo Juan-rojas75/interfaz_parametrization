@@ -1,5 +1,5 @@
 import { CustomerModule } from "./Customer/customer.module";
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { Logger, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
@@ -45,7 +45,14 @@ import { SessionMiddleware } from "./auth/middleware/session.middleware";
   providers: [AppService],
 })
 export class AppModule implements NestModule {
+  private readonly logger = new Logger(AppModule.name);
+
+  constructor(private readonly configService: ConfigService) {}
+  
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(SessionMiddleware).forRoutes('*');
+    this.logger.log(`SE HA CARGADO EL MIDDLEWARE`);
+    this.logger.log(`mongodb://${this.configService.get("DATABASE_USER")}:${this.configService.get("DATABASE_PASSWORD")}@${this.configService.get("DATABASE_HOST")}:${this.configService.get("DATABASE_PORT")}`);
   }
+  
 }
