@@ -5,8 +5,6 @@ services:
     build: ./parametrization-interfaces
     ports:
       - "3000:3000"
-    depends_on:
-      - apigateway
     networks:
       - app_network
 
