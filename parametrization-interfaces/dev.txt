@@ -1,0 +1,174 @@
+"use client";
+import { use } from "react"; // ✅ Importar `use`
+import { apiGet } from "@/app/lib/api";
+import { useEffect, useState } from "react";
+import { DragDropDemo, ItemType } from "../../parametrization/components/DragDrop/drag-drop.component";
+import DropDown from "@/app/shared/components/dropdown/dropdown.component";
+import Button from "@/app/shared/components/button/button.component";
+
+//interfaces
+import { Option } from "@/app/shared/components/dropdown/interfaces/OptionItem.interface";
+
+
+export default function Page({ params }: { params: Promise<{ slug: string }> }) {
+  //Parametros
+  const { slug } = use(params);
+
+  //Clientes
+  const [customers, setCustomers] = useState<Option[]>([]);
+  //Cliente
+  const [customer, setCustomer] = useState<Option | undefined>();
+  //Extension
+  const [extensionSelected, setExtensionSelected] = useState<Option | undefined>();
+
+  //Variables
+  const [template, setTemplate] = useState<{ name?: string; extension?: string } | null>(null);
+  const [datatemplate, setDataTemplate] = useState<ItemType[]>([]);
+  //Varibles de carga
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  //Tipos de extension de documento
+  const extension:Option[] = [
+    { name: "PDF", value: "pdf" },
+    { name: "Excel", value: "xlsx" },
+    { name: "CSV", value: "csv" },
+  ]
+
+  async function init() {
+    if (slug === "crear") {
+      fetchCustomers()
+    }
+    else {
+      fetchTemplates();
+    }
+  }
+  async function fetchCustomers() {
+    const response = await apiGet(`/customers?page=1&limit=0`);
+    if (!response) throw new Error("Error al obtener los datos");
+    setCustomers(response.data.map((customer: any) => ({ name: customer.name, value: customer._id })));
+    setLoading(false);
+  }
+
+  //Función obtener datos del template general
+  async function fetchTemplates() {
+    try {
+        setLoading(true);
+        fetchDataTemplates();
+        const response = await apiGet(`/templates/${slug}`);
+        if (!response) throw new Error("Error al obtener los datos");
+        const customer = {name: response.customer.name, value: response.customer._id}
+        setTemplate(response);
+        setCustomer(customer);
+        setCustomers([customer]);
+        setExtensionSelected({name: response.extension, value: response.extension});
+
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  //Función obtener datos de sus columnas
+  async function fetchDataTemplates() {
+    try {
+      setLoading(true);
+      const response = await apiGet(`/data-template/template/${slug}`);
+      if (!response) throw new Error("Error al obtener los datos");
+      console.log("Respues data template",response);
+      setDataTemplate(response.map(
+        (item: any) => (
+          {
+            ...item,
+            id: item._id,
+            container: "file-structure",
+            config:{
+              name : item.name,
+              link_name: item.link_name,
+              default: item.value_default,
+              size: item.length,
+              type: item.type,
+              completed: item.complete_with,
+              align: item.align,
+            }
+          }  
+        )
+      )
+    );
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Llamada inicial si es editar
+  useEffect(() => {
+    init();
+  }, [slug]);
+
+  // Almacenar los campos seleccionados
+  const [selectedFields, setSelectedFields] = useState<any[]>([]);
+  
+  // Almacenar los campos seleccionados
+  const handleConfigSave = (fields: ItemType[]) => {
+      setSelectedFields(fields);
+  };
+
+  return (
+    <article className="flex flex-col min-h-screen w-full gap-10 h-full p-8">
+      { }
+      {loading ? (
+        <p className="text-primary-950">Cargando...</p>
+      ) : error ? (
+        <p className="text-red-500">Error: {error}</p>
+      // ) : (
+      ) : slug === "crear" ? (
+          <article className="flex flex-col min-h-screen w-full gap-10 h-full p-8">
+              <section className="flex flex-col h-fit w-full gap-4 p-8 bg-secondary-200">
+                <h1 className="text-4xl text-left font-bold text-primary-950">Parametrización de interfaces</h1>
+              </section>
+              <section >
+                <DropDown title="Seleccione el cliente" value={customer} options={customers} onSelect={(value) => { console.log('seleccionado', value); }} />
+                <div>
+                  <h2 className="text-base font-semibold mb-1">Escribe el nombre</h2>
+                  <input type="text" name="name" className="w-full p-2 border rounded" />
+                </div>
+                <DropDown title="Seleccione la extension" value={extensionSelected} options={extension} onSelect={(value) => { console.log('seleccionado', value); }} />
+                <DragDropDemo itemsInit={datatemplate} onConfigSave={handleConfigSave}></DragDropDemo>
+              </section>
+              {/* Botón de Guardar */}
+              <Button disabled={selectedFields.length === 0} active={true} severity="primary" onClick={() => { console.log('Click'); }} >
+                Guardar
+              </Button>
+            </article>
+      ): (
+        template && customer ? (
+          <article className="flex flex-col min-h-screen w-full gap-10 h-full p-8">
+            <section className="flex flex-col h-fit w-full gap-4 p-8 bg-secondary-200">
+              <h1 className="text-4xl text-left font-bold text-primary-950">Parametrización de interfaces</h1>
+            </section>
+            <section >
+              <DropDown title="Seleccione el cliente" value={customer} options={customers} onSelect={(value) => { console.log('seleccionado', value); }} />
+              <div>
+                <h2 className="text-base font-semibold mb-1">Escribe el nombre</h2>
+                <input type="text" name="name" value={template.name} className="w-full p-2 border rounded" />
+              </div>
+              <DropDown title="Seleccione la extension" value={extensionSelected} options={extension} onSelect={(value) => { console.log('seleccionado', value); }} />
+              <DragDropDemo itemsInit={datatemplate} onConfigSave={handleConfigSave}></DragDropDemo>
+            </section>
+            {/* Botón de Guardar */}
+            <Button disabled={selectedFields.length === 0} active={true} severity="primary" onClick={() => { console.log('Click'); }} >
+              Guardar
+            </Button>
+          </article>
+        ) 
+        : (
+          <p>No hay datos disponibles</p>
+        )
+      )
+      }
+    </article>
+  );
+}
