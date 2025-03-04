@@ -39,16 +39,6 @@ services:
     networks:
       - app_network
 
-  apigateway:
-    build: ./nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - backend-nest
-      - backend-python
-    networks:
-      - app_network
-
 networks:
   app_network:
 
