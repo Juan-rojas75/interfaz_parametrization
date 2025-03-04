@@ -40,7 +40,7 @@ services:
       - app_network
 
   apigateway:
-    build: ./ngix
+    build: ./nginx
     ports:
       - "80:80"
     depends_on:
