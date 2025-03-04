@@ -36,9 +36,9 @@ async function bootstrap() {
   // La ruta en que se sirve la documentación
   SwaggerModule.setup('api', app, document); 
 
-  const PORT = configService.get('PORT') || 3002;
+  const PORT = configService.get('PORT') || 3003;
 
   await app.listen(PORT);
-  Logger.log('🚀 Servidor iniciado en http://localhost:3001', 'Bootstrap');
+  Logger.log('🚀 Servidor iniciado en http://localhost:3003', 'Bootstrap');
 }
 bootstrap();
