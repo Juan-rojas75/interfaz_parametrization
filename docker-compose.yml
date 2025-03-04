@@ -11,7 +11,7 @@ services:
       - app_network
 
   backend-nest:
-    build: ./backend/generate-files-app
+    build: ./backend/interfaz_parametrization/parametrization-app
     ports:
       - "3001:3001"
     depends_on:
@@ -20,7 +20,7 @@ services:
       - app_network
 
   backend-python:
-    build: ./backend/interfaz_parametrization
+    build: ./backend/generate-files-app
     ports:
       - "5000:5000"
     depends_on:
