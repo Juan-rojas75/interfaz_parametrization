@@ -3,6 +3,20 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   basePath: '/app',
   trailingSlash: true,
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/auth/login",
+        permanent: true,
+      },
+      {
+        source: "/home",
+        destination: "/home/dashboard",
+        permanent: true,
+      },
+    ];
+  },
   /* config options here */
   eslint: {
     // Warning: This allows production builds to successfully complete even if
