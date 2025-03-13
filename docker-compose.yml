@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   frontend:
+    container_name: frontend-nextjs
     build: ./parametrization-interfaces
     ports:
       - "3000:3000"
@@ -9,6 +10,7 @@ services:
       - app_network
 
   backend-nest:
+    container_name: backend-nestjs
     build: ./backend/interfaz_parametrization/parametrization-app
     ports:
       - "3003:3003"
@@ -21,6 +23,7 @@ services:
     restart: always
 
   backend-python:
+    container_name: backend-python
     build: ./backend/generate-files-app
     ports:
       - "5000:5000"

@@ -25,6 +25,7 @@ RUN npm install --omit=dev
 
 COPY --from=builder /app/.next /app/.next
 COPY --from=builder /app/public /app/public
+COPY --from=builder /app/.next/static /app/.next/static
 
 # Expone el puerto de Next.js
 EXPOSE 3000
