@@ -27,7 +27,7 @@ import { SessionMiddleware } from "./auth/middleware/session.middleware";
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get("DATABASE_USER")}:${configService.get("DATABASE_PASSWORD")}@${configService.get("DATABASE_HOST")}:${configService.get("DATABASE_PORT")}`,
+        uri: `mongodb://${configService.get("DATABASE_USER")}:${configService.get("DATABASE_PASSWORD")}@${configService.get("DATABASE_HOST")}:${configService.get("DATABASE_PORT")}?authSource=admin`,
       }),
       inject: [ConfigService],
     }),
