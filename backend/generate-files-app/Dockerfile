@@ -16,5 +16,6 @@ COPY . .
 EXPOSE 5000
 
 # Comando para ejecutar FastAPI con Uvicorn
-CMD ["python", "app.py"]
+# Usa Gunicorn en lugar de Python simple
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
 
