@@ -13,7 +13,7 @@ services:
     ports:
       - "3003:3003"
     env_file:
-      - .env
+      - ./backend/interfaz_parametrization/parametrization-app/.env
     depends_on:
       - mongo_container
     networks:
