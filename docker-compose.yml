@@ -4,6 +4,8 @@ services:
   frontend:
     container_name: frontend-nextjs
     build: ./parametrization-interfaces
+    env_file:
+      - ./parametrization-interfaces/.env
     ports:
       - "3000:3000"
     networks:
