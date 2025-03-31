@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, send_file, after_this_request
+from flask import Flask, request, jsonify, send_file
+from bson import ObjectId
 import os
 import threading
 import time
@@ -53,24 +54,44 @@ def upload_file():
     if not record_id or not customer_id:
         return jsonify({"error": "Faltan datos requeridos"}), 400
 
-    print(record_id, customer_id)
-
+    # Obtener de la base de datos el template
+    record_id_obj = ObjectId(record_id)
+    template = mongo.find_one("templates", {"_id": record_id_obj})
+    extension = template["extension"]
+    extension = extension.lower()
     # Generar el archivo de salida
     generate_ = GenerateFileByFile(record_id, customer_id, file_path)
-    output_filename, dfFinal = generate_.generateFileByFileExcel()
-
+    if extension == "xlsx" : 
+        output_filename, dfFinal = generate_.generateFileByFileExcel()
+        # Guardar el archivo de salida en el servidor
+        output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
+        dfFinal.to_excel(output_path, index=False)
+        
+        # Inicia un hilo para eliminar los archivos después de un tiempo
+        threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
+        
+        response = send_file(output_path, as_attachment=True, download_name=output_filename)
+        response.headers["Access-Control-Allow-Origin"] = "*"  
+        response.headers["Content-Disposition"] = f'attachment; filename="{output_filename}"'  # 👈 Enviar el nombre del archivo
+        return response
+    elif (extension == "txt") :
+        output_filename, dfFinal = generate_.generateFileByFileTXT()
+        # Guardar el archivo de salida en el servidor
+        output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+                for index, row in dfFinal.iterrows():
+                    f.write(str(row["txt"]) + '\n')  # Escribe cada valor en una nueva línea
+        
+        # # Inicia un hilo para eliminar los archivos después de un tiempo
+        # threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
+        
+        response = send_file(output_path, as_attachment=True, download_name=output_filename)
+        response.headers["Access-Control-Allow-Origin"] = "*"  
+        response.headers["Content-Disposition"] = f'attachment; filename="{output_filename}"'  # 👈 Enviar el nombre del archivo
+        return response
+        # return jsonify({"message": "Archivo generado exitosamente"}), 200
     
-    # Guardar el archivo de salida en el servidor
-    output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
-    dfFinal.to_excel(output_path, index=False)
-    
-    # Inicia un hilo para eliminar los archivos después de un tiempo
-    threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
-    
-    response = send_file(output_path, as_attachment=True, download_name=output_filename)
-    response.headers["Access-Control-Allow-Origin"] = "*"  
-    response.headers["Content-Disposition"] = f'attachment; filename="{output_filename}"'  # 👈 Enviar el nombre del archivo
-    return response
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

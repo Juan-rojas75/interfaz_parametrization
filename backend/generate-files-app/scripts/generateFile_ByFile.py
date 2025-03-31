@@ -51,7 +51,55 @@ class GenerateFileByFile:
             # Convertir la lista de diccionarios en DataFrame
             dfFinal = pd.DataFrame(dfFinal_data)
 
-            output_path = f"{cliente['name']}_{template['name']}.xlsx";
+            output_path = f"{cliente['name']}_{template['name']}.xlsx"
+            return output_path , dfFinal
+
+        except Exception as e:
+            print("Error:", e)
+            
+    def generateFileByFileTXT(self):
+        try:
+            record_id_obj = ObjectId(self.idTemplate)  
+            customer_id = ObjectId(self.idCustomer)  
+
+            # OBTENER INFO BASE
+            cliente = mongo.find_one("customers", {"_id": customer_id})
+            template = mongo.find_one("templates", {"_id": record_id_obj})
+            dataTemplate = list(mongo.find_many_id("datatemplates", {"template": self.idTemplate}))
+            # Ordenar por index
+            dataTemplate.sort(key=lambda x: x["index"])
+
+            print("ENTRA A TXT")
+            # Procesar el archivo con pandas
+            df = pd.read_excel(self.pathFile)
+            data = df.to_dict(orient="records")
+
+            dfFinal_data = []  # Lista para almacenar las filas formateadas
+
+            # Recorrer filas del DataFrame original
+            for row in data:
+                print(row)
+                new_row = {}  # Diccionario para la nueva fila formateada
+                rowTotal = ""
+                for column in dataTemplate:
+                    column_name = column["name"]
+                    link_name = column["link_name"]
+
+                    # Obtener el valor original de la fila o None si no existe
+                    original_value = row.get(link_name, None)
+
+                    # Aplicar formateo según la configuración
+                    formatted_value = self.format_value_txt(original_value, column)
+
+                    # Guardar el valor formateado en la nueva fila
+                    
+                    rowTotal = rowTotal + str(formatted_value)
+                new_row["txt"] = rowTotal
+                dfFinal_data.append(new_row)  # Agregar la nueva fila a la lista
+            # Convertir la lista de diccionarios en DataFrame
+            dfFinal = pd.DataFrame(dfFinal_data)
+            
+            output_path = f"{cliente['name']}_{template['name']}.txt"
             return output_path , dfFinal
 
         except Exception as e:
@@ -128,3 +176,46 @@ class GenerateFileByFile:
                     value = value.center(length, fill_char)
             
         return value
+    
+    def format_value_txt(self, value, config):
+        """
+        Formatea un valor según la configuración dada.
+
+        :param value: El valor original del campo.
+        :param config: Diccionario con la configuración del campo.
+        :return: Valor formateado según la configuración.
+        """
+        # Obtener configuración
+        length = config.get("length", None)  # Longitud máxima del campo
+        field_type = config.get("type", "string")  # Tipo de dato
+        complete_with = config.get("complete_with", "space")  # Caracter de relleno
+        align = config.get("align", "left")  # Alineación
+        default = config.get("default", "")  # Valor por defecto
+
+        # Asignar valor por defecto si es None
+        if value is None:
+            value = default
+
+        # Convertir el valor al tipo adecuado
+        if field_type == "string":
+            value = str(value)
+        elif field_type == "number":
+            value = str(int(value)) if str(value).isdigit() else "0"
+        elif field_type == "float":
+            value = f"{float(value):.2f}" if str(value).replace(".", "").isdigit() else "0.00"
+
+        # Determinar el caracter de relleno
+        fill_char = " " if complete_with == "space" else "0"
+
+        # Aplicar longitud y alineación
+        if length:
+            value = value[:length]  # Recortar si es más largo
+            if align == "left":
+                value = value.ljust(length, fill_char)
+            elif align == "right":
+                value = value.rjust(length, fill_char)
+            elif align == "center":
+                value = value.center(length, fill_char)
+
+        return value
+

@@ -2,8 +2,9 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { apiGet, apiPost } from "@/app/lib/api";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { AuthContextType, UserInterface } from "./interfaces/auth.interface";
+import { useToast } from "./ToastContext";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -18,6 +19,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,9 +32,16 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
           logout();
         }
       }
+      else {
+        // showToast("Error!", "Por favor inicia sesion, sesion finalizada.", 4000);
+        router.push("/auth/login");
+      }
       setLoading(false);
     };
-    fetchUser();
+    if(pathname !== "/auth/login/" && pathname !== "/auth/forgot-password/") {
+      fetchUser();
+    }
+    setLoading(false);
   }, []);
 
   const getUser = () => {
