@@ -32,9 +32,8 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
   // Tipos de extensión de documento (opciones estáticas)
   const extension: Option[] = useMemo(
     () => [
-      { name: "PDF", value: "pdf" },
       { name: "Excel", value: "xlsx" },
-      { name: "CSV", value: "csv" },
+      { name: "TXT", value: "txt" },
     ],
     []
   );
