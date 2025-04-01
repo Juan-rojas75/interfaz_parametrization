@@ -84,7 +84,7 @@ def upload_file():
                     f.write(str(row["txt"]) + '\n')  # Escribe cada valor en una nueva línea
         
         # # Inicia un hilo para eliminar los archivos después de un tiempo
-        # threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
+        threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
         
         response = send_file(output_path, as_attachment=True, download_name=output_filename)
         response.headers["Access-Control-Allow-Origin"] = "*"  

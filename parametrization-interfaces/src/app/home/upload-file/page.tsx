@@ -20,7 +20,9 @@ export default function UploadFile() {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [customer, setCustomer] = useState<Option | undefined>();
   const [templates, setTemplates] = useState<Option[]>([]);
+  const [templatesExtension, setTemplatesExtension] = useState<Option[]>([]);
   const [template, setTemplate] = useState<Option>();
+  const [extension, setExtension] = useState<String>("xlsx");
 
   // 📌 Capturar archivo desde input
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +70,12 @@ export default function UploadFile() {
           name: template.name,
           value: template.id,
         }));
+        const templatesDataExtension = response.map((template: any) => ({
+          name: template.extension,
+          value: template.id,
+        }));
         setTemplates(templatesData);
+        setTemplatesExtension(templatesDataExtension);
         hideLoader();
         
       } catch (err: any) {
@@ -111,7 +118,7 @@ export default function UploadFile() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "Archivo procesado.xlsx";
+      link.download = "Archivo procesado."+extension;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -129,6 +136,17 @@ export default function UploadFile() {
   useEffect(() => {
       fetchCustomers();
   }, []);
+
+  // Llamada inicial (fetch data)
+  useEffect(() => {
+    templatesExtension.map((extension) => {
+      if (extension.value === template?.value) {
+        setExtension(extension.name)
+      }
+    })
+    setExtension
+  }, [template]);
+
   //Llamada cuando se selecciona el cliente
   useEffect(() => {
     fetchTemplates();
