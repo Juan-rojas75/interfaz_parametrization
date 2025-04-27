@@ -82,11 +82,10 @@ class GenerateFileByFile:
                 new_row = {}  # Diccionario para la nueva fila formateada
                 rowTotal = ""
                 for column in dataTemplate:
-                    column_name = column["name"]
                     link_name = column["link_name"]
 
                     # Obtener el valor original de la fila o None si no existe
-                    original_value = row.get(link_name, None)
+                    original_value = row.get(link_name, "")
 
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(original_value, column)
@@ -190,11 +189,19 @@ class GenerateFileByFile:
         field_type = config.get("type", "string")  # Tipo de dato
         complete_with = config.get("complete_with", "space")  # Caracter de relleno
         align = config.get("align", "left")  # Alineación
+        values_transform = config.get("valuesTransform", [])  # Transformaciones de valores
         default = config.get("default", "")  # Valor por defecto
 
         # Asignar valor por defecto si es None
         if value is None:
             value = default
+        
+            
+        # Aplicar transformaciones de valor si existen
+        if values_transform:
+            for transform in values_transform:
+                if value == transform.get("default"):
+                    value = transform.get("replace", value)
 
         # Convertir el valor al tipo adecuado
         if field_type == "string":
