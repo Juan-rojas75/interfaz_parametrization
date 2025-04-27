@@ -134,14 +134,8 @@ class GenerateFileByFile:
 
         # Aplicar transformaciones de valor si existen
         if values_transform:
-            print(values_transform)
             for transform in values_transform:
-                print("Valores")
-                print(value)
-                print(type(value))
-                print(transform.get("replace"))
-                print(value == transform.get("default"))
-                if value == transform.get("default"):
+                if str(value) == transform.get("default"):
                     value = transform.get("replace", value)
 
     
