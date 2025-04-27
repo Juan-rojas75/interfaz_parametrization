@@ -122,14 +122,20 @@ class GenerateFileByFile:
         
         if value is None:
             value = default
+        if value is "nan":
+            value = ""
             
         if field_type == "auto-number":
             self.count += 1
             value = self.count
 
+        print(values_transform)
         # Aplicar transformaciones de valor si existen
         if values_transform:
             for transform in values_transform:
+                print("Valor original:", value)
+                print("Transformación default:", transform.get("default"))
+                print("Transformación replace:", transform.get("replace"))
                 if value == transform.get("default"):
                     value = transform.get("replace", value)
 
