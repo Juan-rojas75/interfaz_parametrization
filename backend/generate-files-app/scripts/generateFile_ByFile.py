@@ -129,13 +129,15 @@ class GenerateFileByFile:
             self.count += 1
             value = self.count
 
-        print(values_transform)
         # Aplicar transformaciones de valor si existen
         if values_transform:
+            print(values_transform)
             for transform in values_transform:
-                print("Valor original:", value)
-                print("Transformación default:", transform.get("default"))
-                print("Transformación replace:", transform.get("replace"))
+                print("Valores")
+                print(value)
+                print(transform.get("default"))
+                print(transform.get("replace"))
+                print(value == transform.get("default"))
                 if value == transform.get("default"):
                     value = transform.get("replace", value)
 
