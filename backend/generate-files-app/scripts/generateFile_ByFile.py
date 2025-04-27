@@ -121,7 +121,10 @@ class GenerateFileByFile:
         
         
         if value is None:
-            value = default
+            if default is None:
+                value = ""
+            else:
+                value = default
         if value is "nan":
             value = ""
             
@@ -135,7 +138,7 @@ class GenerateFileByFile:
             for transform in values_transform:
                 print("Valores")
                 print(value)
-                print(transform.get("default"))
+                print(type(value))
                 print(transform.get("replace"))
                 print(value == transform.get("default"))
                 if value == transform.get("default"):

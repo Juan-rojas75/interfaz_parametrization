@@ -6,6 +6,7 @@ import time
 from datebase.datebase import MongoDB
 from scripts.generateFile_ByFile import GenerateFileByFile
 from config import MONGO_URI, MONGO_DB_NAME
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -66,6 +67,7 @@ def upload_file():
         # Guardar el archivo de salida en el servidor
         output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
         dfFinal.to_excel(output_path, index=False)
+        dfFinal.replace({pd.NaT: None}, inplace=True)  # Reemplaza NaT con None para evitar errores al guardar en Excel
         
         # Inicia un hilo para eliminar los archivos después de un tiempo
         threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
