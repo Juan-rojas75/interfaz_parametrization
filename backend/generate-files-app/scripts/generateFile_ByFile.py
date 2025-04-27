@@ -178,7 +178,13 @@ class GenerateFileByFile:
                     value = value.rjust(length, fill_char)
                 elif align == "center":
                     value = value.center(length, fill_char)
-            
+        
+        print(f"VALUE: {value}")
+        if value is None:
+            value = ""
+        if value == "nan":
+            value = ""
+        print(f"VALUE: {value}")
         return value
     
     def format_value_txt(self, value, config):
