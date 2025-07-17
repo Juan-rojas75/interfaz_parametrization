@@ -46,6 +46,7 @@ interface DragDropProps {
 
 export function DragDropDemo({itemsInit, onConfigSave }: Readonly<DragDropProps>) {
   const [items, setItems] = useState<ItemType[]>(itemsInit);
+  const [item, setItem] = useState<any>();
   const [configuredFields, setConfiguredFields] = useState<ItemType[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showFieldCreationModal, setShowFieldCreationModal] = useState(false);
@@ -114,23 +115,54 @@ function handleDragEnd(event: any) {
 
   // Maneja la configuración guardada y llama al callback del padre
   const handleConfigSave = (fieldId: string, config: FieldConfig) => {
-    const fields_ = items.map((item) => {
-      return { ...item, config: item.id === fieldId ? config : item.config };
-    });
-    setItems(fields_);
-    const configuredFields = fields_.filter((item) => item.container === "file-structure" && item.config);
-    setConfiguredFields(configuredFields);
-    onConfigSave(configuredFields);
+    if(fieldId === "edit-init"){
+      setShowFieldCreationModal(true)
+      setItem(config);
+    }else{
+      const fields_ = items.map((item) => {
+        return { ...item, config: item.id === fieldId ? config : item.config };
+      });
+      setItems(fields_);
+      const configuredFields = fields_.filter((item) => item.container === "file-structure" && item.config);
+      setConfiguredFields(configuredFields);
+      onConfigSave(configuredFields);
+    }
   };
 
   //Funcion para manejar la creación de un nuevo campo
-  function handleCreateField(newField: Omit<ItemType, "id">) {
-    const newFieldWithId = {
-      ...newField,
-      id: (items.length + 1).toString(),
-      index: items.length + 1,
-    };
-    setItems((prev) => [...prev, newFieldWithId]);
+  // function handleCreateField(newField: Omit<ItemType, "id">) {
+
+    
+  //   const newFieldWithId = {
+  //     ...newField,
+  //     id: (items.length + 1).toString(),
+  //     index: items.length + 1,
+  //   };
+  //   setItems((prev) => [...prev, newFieldWithId]);
+  // }
+  function handleCreateField(newField: any) {
+    setItems((prevItems) => {
+      const exists = prevItems.find((itemactual) => itemactual.id === item.id);
+      if (exists) {
+        // Reemplazar el item existente
+        const newFieldWithId = {
+          ...newField,
+          id:item.id,
+          index: item.index,
+        };
+        return prevItems.map((itemactual) =>
+          itemactual.id === item.id ? newFieldWithId : itemactual
+        );
+      } else {
+        // Agregar nuevo item
+        const newFieldWithId = {
+          ...newField,
+          id: (prevItems.length + 1).toString(),
+          index: prevItems.length + 1,
+        };
+        return [...prevItems, newFieldWithId];
+      }
+    });
   }
 
   
@@ -156,7 +188,7 @@ function handleDragEnd(event: any) {
                 id={container.id}
                 title={container.title}
                 items={itemsByContainer[container.id] || []}
-                showConfigButton={container.id === "file-structure"}
+                showConfigButton={true}
                 onConfigSave={handleConfigSave}
               />
             ))}
@@ -173,6 +205,7 @@ function handleDragEnd(event: any) {
 
       {showFieldCreationModal && (
         <FieldCreationModal
+          field={item}
           onSave={(newField) => {
             handleCreateField(newField);
             setShowFieldCreationModal(false);

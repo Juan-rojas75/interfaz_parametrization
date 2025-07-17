@@ -7,13 +7,14 @@ import FieldConfigModal from "../ConfigModal/ConfigModal.component";
 import { useState } from "react";
 import { ItemType } from "../DragDrop/drag-drop.component";
 import { FieldConfig } from "../ConfigModal/interfaces/FieldConfig.interface";
+import FieldCreationModal from "../FieldCreationalModal/field-creational-modal.component";
 
 interface SortableItemProps {
   id: string;
   children: React.ReactNode;
   showConfigButton?: boolean;
   field: ItemType;
-  onConfigSave: (fieldId: string, config: FieldConfig) => void; // Callback para enviar datos al padre
+  onConfigSave: (fieldId: string, config: FieldConfig) => void;
 }
 
 export function SortableItem({
@@ -34,10 +35,16 @@ export function SortableItem({
 
   // Maneja la configuración guardada y llama al callback del padre
   const handleSaveConfig = (fieldId: string, config: FieldConfig) => {
-    console.log(fieldId);
-    console.log(config);
     onConfigSave(fieldId, config);
     setConfigField(false);
+  };
+
+  const info = (config: any) => {
+    if(config.container === "columns") {
+      onConfigSave("edit-init", config);
+    }else{
+      setConfigField(true);
+    }
   };
 
   return (
@@ -55,7 +62,7 @@ export function SortableItem({
       </div>
       <div>
         {showConfigButton && (
-          <Button severity="secondary" onClick={() => setConfigField(true)} >
+          <Button severity="secondary" onClick={() => info(field)} >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="4"><path d="m24 4l-6 6h-8v8l-6 6l6 6v8h8l6 6l6-6h8v-8l6-6l-6-6v-8h-8z"/><path d="M24 30a6 6 0 1 0 0-12a6 6 0 0 0 0 12Z"/></g></svg>
           </Button>
         )}

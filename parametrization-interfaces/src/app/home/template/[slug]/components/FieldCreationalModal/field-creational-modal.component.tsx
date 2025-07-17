@@ -7,14 +7,16 @@ import Modal from '@/app/shared/components/modal/modal.component';
 import DropDown from '@/app/shared/components/dropdown/dropdown.component';
 
 interface FieldCreationModalProps {
+  field: any | null;
   onSave: (field: Omit<ItemType, 'id'>) => void;
   onCancel: () => void;
 }
 
-const FieldCreationModal: React.FC<FieldCreationModalProps> = ({ onSave, onCancel }) => {
-  const [fieldName, setFieldName] = useState('');
+const FieldCreationModal: React.FC<FieldCreationModalProps> = ({ field, onSave, onCancel }) => {
+
+  const [fieldName, setFieldName] = useState(field?.name || '');
   const [fieldType, setFieldType] = useState('string');
-  const [valuesDefault, setValuesDefault] = useState<Array<{ value: number; name: string }>>([]);
+  const [valuesDefault, setValuesDefault] = useState<Array<{ value: number; name: string }>>(field?.valuesDefault || []);
   const [newValueName, setNewValueName] = useState('');
 
   const handleAddDefaultValue = () => {
@@ -44,10 +46,8 @@ const FieldCreationModal: React.FC<FieldCreationModalProps> = ({ onSave, onCance
 
   return (
     <Modal>
-
       <div className="text-primary-950 w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
         <h2 className="mb-4 text-lg font-semibold">Crear Nuevo Campo</h2>
-
         <div className="mb-4">
         <h2 className="text-base font-semibold mb-1">Nombre del campo</h2>
           <input

@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Configurar instancia de Axios
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3003/api/v1", // Usa variables de entorno
+  // baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3003/api/v1", // Usa variables de entorno
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://apiparametrization.nono.com.co/api/v1", // Usa variables de entorno
   headers: { "Content-Type": "application/json" },
 });
 
