@@ -142,7 +142,7 @@ function handleDragEnd(event: any) {
   // }
   function handleCreateField(newField: any) {
     setItems((prevItems) => {
-      const exists = prevItems.find((itemactual) => itemactual.id === item.id);
+      const exists = prevItems.find((itemactual) => itemactual.id === newField.id);
       if (exists) {
         // Reemplazar el item existente
         const newFieldWithId = {
