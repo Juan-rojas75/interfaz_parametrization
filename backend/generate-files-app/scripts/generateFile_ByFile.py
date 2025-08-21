@@ -201,14 +201,17 @@ class GenerateFileByFile:
         values_transform = config.get("valuesTransform", [])
         default = config.get("default", "")
         
-        
+        print("ENTRA A FORMATEAR")
+        print(value)
         if value is None:
+            print(default)
             if default is None:
                 value = ""
             else:
                 value = default
         if value is "nan":
             value = ""
+        print(value)
             
         if field_type == "auto-number":
             self.count += 1
