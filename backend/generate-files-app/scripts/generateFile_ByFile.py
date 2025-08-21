@@ -179,12 +179,10 @@ class GenerateFileByFile:
                 elif align == "center":
                     value = value.center(length, fill_char)
         
-        print(f"VALUE: {value}")
         if value is None:
             value = ""
         if value == "nan":
             value = ""
-        print(f"VALUE: {value}")
         return value
     
     def format_value_txt(self, value, config):
@@ -196,44 +194,71 @@ class GenerateFileByFile:
         :return: Valor formateado según la configuración.
         """
         # Obtener configuración
-        length = config.get("length", None)  # Longitud máxima del campo
-        field_type = config.get("type", "string")  # Tipo de dato
-        complete_with = config.get("complete_with", "space")  # Caracter de relleno
-        align = config.get("align", "left")  # Alineación
-        values_transform = config.get("valuesTransform", [])  # Transformaciones de valores
-        default = config.get("default", "")  # Valor por defecto
-
-        # Asignar valor por defecto si es None
-        if value is None:
-            value = default
+        length = config.get("length", None)
+        field_type = config.get("type", "string")
+        complete_with = config.get("complete_with", "space")
+        align = config.get("align", "left")
+        values_transform = config.get("valuesTransform", [])
+        default = config.get("default", "")
         
+        
+        if value is None:
+            if default is None:
+                value = ""
+            else:
+                value = default
+        if value is "nan":
+            value = ""
             
+        if field_type == "auto-number":
+            self.count += 1
+            value = self.count
+
         # Aplicar transformaciones de valor si existen
         if values_transform:
             for transform in values_transform:
-                if value == transform.get("default"):
+                if str(value) == transform.get("default"):
                     value = transform.get("replace", value)
 
-        # Convertir el valor al tipo adecuado
+       # Convertir al tipo adecuado
         if field_type == "string":
             value = str(value)
         elif field_type == "number":
-            value = str(int(value)) if str(value).isdigit() else "0"
+            if isinstance(value, (int, float)):  # Verifica si ya es número
+                value = value  # No hacer nada, ya es correcto
+            else:
+                try:
+                    value = int(value) if str(value).isdigit() else 0
+                except Exception as e:
+                    print(f"Error convirtiendo el valor: {value}. Error: {e}")
+                    value = 0  # Valor por defecto en caso de error
         elif field_type == "float":
-            value = f"{float(value):.2f}" if str(value).replace(".", "").isdigit() else "0.00"
-
-        # Determinar el caracter de relleno
-        fill_char = " " if complete_with == "space" else "0"
-
+            value = float(value) if str(value).replace(".", "").isdigit() else 0.0
+        elif field_type == "date":
+            format_date = config.get("format_date", "%Y-%m-%d")
+            try:
+                value = pd.to_datetime(value).strftime(format_date)
+            except Exception as e:
+                print(f"Error convirtiendo el valor: {value}. Error: {e}")
+                value = None
+                
         # Aplicar longitud y alineación
         if length:
-            value = value[:length]  # Recortar si es más largo
-            if align == "left":
-                value = value.ljust(length, fill_char)
-            elif align == "right":
-                value = value.rjust(length, fill_char)
-            elif align == "center":
-                value = value.center(length, fill_char)
+            if complete_with == "space":
+                fill_char = " "
+            elif complete_with == "zero":
+                fill_char = "0"
+            else:
+                fill_char = complete_with
 
+            if field_type != "date" and field_type != "number" and field_type != "auto-number":
+                value = value[:length]
+                if align == "left":
+                    value = value.ljust(length, fill_char)
+                elif align == "right":
+                    value = value.rjust(length, fill_char)
+                elif align == "center":
+                    value = value.center(length, fill_char)
+                    
         return value
 
