@@ -6,5 +6,5 @@ export enum DataType {
   Boolean = 'boolean',
   Select = 'select',
   Autonumber = 'auto-number',
-  Invert = 'string-invert',
+  Invert = 'string-inverted',
 }
