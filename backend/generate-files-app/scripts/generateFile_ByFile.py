@@ -202,6 +202,7 @@ class GenerateFileByFile:
         default = config.get("default", "")
         
         print("ENTRA A FORMATEAR")
+        print(config)
         print(value)
         if value is None:
             print(default)
