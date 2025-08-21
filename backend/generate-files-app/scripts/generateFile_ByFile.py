@@ -204,7 +204,7 @@ class GenerateFileByFile:
         print("ENTRA A FORMATEAR")
         print(config)
         print(value)
-        if value is None:
+        if value is None or value == "":
             print(default)
             if default is None:
                 value = ""
