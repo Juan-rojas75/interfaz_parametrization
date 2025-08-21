@@ -125,7 +125,7 @@ class GenerateFileByFile:
                 value = ""
             else:
                 value = default
-        if value is "nan":
+        if value == "nan":
             value = ""
             
         if field_type == "auto-number":
@@ -209,7 +209,7 @@ class GenerateFileByFile:
                 value = ""
             else:
                 value = default
-        if value is "nan":
+        if value == "nan":
             value = ""
         print(value)
             
