@@ -201,9 +201,6 @@ class GenerateFileByFile:
         values_transform = config.get("valuesTransform", [])
         default = config.get("default", "")
         
-        print("ENTRA A FORMATEAR")
-        print(config)
-        print(value)
         if value is None or value == "":
             print(default)
             if default is None:
@@ -225,7 +222,7 @@ class GenerateFileByFile:
                     value = transform.get("replace", value)
 
        # Convertir al tipo adecuado
-        if field_type == "string":
+        if field_type == "string" or field_type == "string-inverted":
             value = str(value)
         elif field_type == "number":
             if isinstance(value, (int, float)):  # Verifica si ya es número
@@ -256,13 +253,25 @@ class GenerateFileByFile:
                 fill_char = complete_with
 
             if field_type != "date" and field_type != "number" and field_type != "auto-number":
-                value = value[:length]
-                if align == "left":
-                    value = value.ljust(length, fill_char)
-                elif align == "right":
-                    value = value.rjust(length, fill_char)
-                elif align == "center":
-                    value = value.center(length, fill_char)
+                if field_type == "string-inverted":
+                    # Tomar los últimos `length` caracteres
+                    value = value[-length:]
+                    if align == "left":
+                        value = value.ljust(length, fill_char)
+                    elif align == "right":
+                        value = value.rjust(length, fill_char)
+                    elif align == "center":
+                        value = value.center(length, fill_char)
+                else:
+                    # Tomar los primeros `length` caracteres
+                    value = value[:length]
+                    if align == "left":
+                        value = value.ljust(length, fill_char)
+                    elif align == "right":
+                        value = value.rjust(length, fill_char)
+                    elif align == "center":
+                        value = value.center(length, fill_char)
+
                     
         return value
 
