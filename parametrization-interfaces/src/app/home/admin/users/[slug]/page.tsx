@@ -25,11 +25,11 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
 
   //roles
   const [roles, setRoles] = useState<Option[]>([]);
-  const [rolSelected, setRolSelected] = useState<Option | undefined>();
+  const [rolSelected, setRolSelected] = useState<Option | null>();
 
   //Cliente
   const [customer, setCustomer] = useState<Option[]>([]);
-  const [customerSelected, setCustomerSelected] = useState<Option | undefined>();
+  const [customerSelected, setCustomerSelected] = useState<Option | null>();
 
   // Obtener datos del template
   async function fetchUser_id() {
