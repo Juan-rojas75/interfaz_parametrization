@@ -9,6 +9,7 @@ export interface FieldConfig {
     align?: string;
     format_date?: string;
     transformation?: ValuesDefault[];
+    type_calcule?: string;
   }
 
 export interface ValuesDefault {

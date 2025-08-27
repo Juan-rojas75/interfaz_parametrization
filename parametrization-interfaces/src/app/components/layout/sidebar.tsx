@@ -187,7 +187,7 @@ export function Sidebar() {
       {/* Header */}
       <div className="flex items-center justify-between gap-2 px-3 py-4">
         <div className="flex items-center gap-2 overflow-hidden px-2">
-          <Image src="/logos/3.png" width={36} height={36} alt="Logo" className="rounded" />
+          <Image src="/logos/nono-2.png" width={36} height={36} alt="Logo" className="rounded" />
           {!collapsed && (
             <span className="truncate font-semibold tracking-tight text-secondary-50">Nono Parametrization</span>
           )}

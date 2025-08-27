@@ -15,6 +15,7 @@ interface SortableItemProps {
   showConfigButton?: boolean;
   field: ItemType;
   onConfigSave: (fieldId: string, config: FieldConfig) => void;
+  firstLine?: boolean;
 }
 
 export function SortableItem({
@@ -23,6 +24,7 @@ export function SortableItem({
   showConfigButton = false,
   field,
   onConfigSave, // Callback recibido como prop
+  firstLine = false,
 }: Readonly<SortableItemProps>) {
   const [configField, setConfigField] = useState(false);
 
@@ -72,6 +74,7 @@ export function SortableItem({
             field={field}
             onSave={handleSaveConfig}
             onCancel={() => setConfigField(false)}
+            firstLine={firstLine}
           />
         )}
       </div>

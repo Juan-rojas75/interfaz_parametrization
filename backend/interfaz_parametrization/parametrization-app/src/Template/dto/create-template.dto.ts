@@ -51,6 +51,14 @@ export class CreateTemplateDto {
     @IsNotEmpty()
     @IsBoolean()
     status: boolean;
+    
+    @ApiProperty({ 
+        example: true,
+        description: 'The first line of Template',
+        type: Boolean,
+    })
+    @IsBoolean()
+    first_line: boolean;
 
     //Fields
     @ApiProperty({ 

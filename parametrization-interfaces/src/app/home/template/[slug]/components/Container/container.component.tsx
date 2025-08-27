@@ -12,9 +12,10 @@ interface ContainerProps {
   showConfigButton?: boolean
   onConfigSave: (fieldId: string, config: FieldConfig) => void; // Callback para enviar datos al padre
   emptyState?: React.ReactNode; 
+  firstLine?: boolean;
 }
 
-export function Container({ id, title, items, showConfigButton = false , onConfigSave}: ContainerProps) {
+export function Container({ id, title, items, showConfigButton = false , onConfigSave, firstLine = false}: ContainerProps) {
   const { setNodeRef } = useDroppable({
     id,
   })
@@ -27,7 +28,7 @@ export function Container({ id, title, items, showConfigButton = false , onConfi
       <SortableContext id={id} items={items} strategy={rectSortingStrategy}>
         <div ref={setNodeRef} className="flex flex-col gap-2">
           {items.map((item) => (
-            <SortableItem key={item.id} id={item.id} field={item} showConfigButton={showConfigButton} onConfigSave={handleConfigSave}>
+            <SortableItem key={item.id} id={item.id} field={item} showConfigButton={showConfigButton} onConfigSave={handleConfigSave} firstLine={firstLine}>
               {item.name}
             </SortableItem>
           ))}

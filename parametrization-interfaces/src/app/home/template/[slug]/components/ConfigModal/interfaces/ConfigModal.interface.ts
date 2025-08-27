@@ -5,4 +5,5 @@ export interface FieldConfigModalProps {
     field: ItemType;
     onSave: (fieldId: string, config: FieldConfig) => void;
     onCancel: () => void;
+    firstLine?: boolean;
   }

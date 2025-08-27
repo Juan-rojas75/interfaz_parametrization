@@ -24,6 +24,7 @@ export type ItemType = {
   index: number;
   name: string;
   container: string;
+  first_line?: boolean;
   valuesDefault?: Array<{ value: number; name: string }>;
   config?: FieldConfig;
 };
@@ -166,6 +167,7 @@ export function DragDropDemo({ itemsInit, onConfigSave }: Readonly<DragDropProps
           ...newField,
           id: String(prev.length + 1),
           index: prev.length + 1,
+          first_line: false,
         },
       ];
     });

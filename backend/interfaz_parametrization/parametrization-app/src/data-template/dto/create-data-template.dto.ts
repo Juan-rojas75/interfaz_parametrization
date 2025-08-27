@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsBoolean, isBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import { Types } from "mongoose";
 import { DataType } from "src/common/interfaces/type-data.interface";
 import { Template } from "src/Template/db/model/template.model";
@@ -113,6 +113,15 @@ export class CreateDataTemplateDto {
         @IsNotEmpty()
         @IsString()
         align: string;
+
+        @ApiProperty({ 
+            example: "left",
+            description: 'the type calcule of the data column first line',
+            type: String,
+            required: false,
+        })
+        @IsString()
+        type_calcule: string;
         
         @ApiProperty({ 
             example: [{ default: "value1", replace: "value_replace_1" }, { default: "value2", replace: "value_replace_2" }],
@@ -124,9 +133,19 @@ export class CreateDataTemplateDto {
         valuesTransform: { default: string; replace: string }[];
 
         @ApiProperty({ 
+            example: false,
+            description: 'the first line of Template',
+            type: Boolean,
+            required: false,
+        })
+        @IsBoolean()
+        @IsOptional()
+        first_line?: Boolean;
+        
+        @ApiProperty({ 
             example: Date.now(),
             description: 'The date of creation of Template',
-            type: Boolean,
+            type: Date,
             required: false,
         })
         @IsDate()
@@ -136,7 +155,7 @@ export class CreateDataTemplateDto {
         @ApiProperty({ 
             example: Date.now(),
             description: 'The date of update of Template',
-            type: Boolean,
+            type: Date,
             required: false,
         })
         @IsDate()

@@ -10,8 +10,9 @@ import { completedOptions } from "./const/completed.const";
 import { alignOptions } from "./const/align.const";
 import type { FieldConfig } from "./interfaces/FieldConfig.interface";
 import type { FieldConfigModalProps } from "./interfaces/ConfigModal.interface";
+import { typeCalculeOptions } from "./const/typeCalcule.const";
 
-export default function FieldConfigModal({ field, onSave, onCancel }: Readonly<FieldConfigModalProps>) {
+export default function FieldConfigModal({ field, onSave, onCancel, firstLine = false, }: Readonly<FieldConfigModalProps>) {
   // Estado base del form (controlado)
   const [config, setConfig] = useState<FieldConfig>(() => ({
     name: field.config?.name ?? "",
@@ -22,6 +23,7 @@ export default function FieldConfigModal({ field, onSave, onCancel }: Readonly<F
     format_date: field.config?.format_date,
     align: field.config?.align,
     completed: field.config?.completed,
+    type_calcule: field.config?.type_calcule,
     transformation: field.config?.transformation ?? undefined,
   }));
 
@@ -50,6 +52,7 @@ export default function FieldConfigModal({ field, onSave, onCancel }: Readonly<F
       type: field.config?.type,
       format_date: field.config?.format_date,
       align: field.config?.align,
+      type_calcule: field.config?.type_calcule,
       completed: field.config?.completed,
       transformation: field.config?.transformation ?? undefined,
     });
@@ -256,6 +259,18 @@ export default function FieldConfigModal({ field, onSave, onCancel }: Readonly<F
               helperText="Alineación del contenido al exportar."
             />
           </div>
+          {/* Tipo primera linea */}
+          {firstLine && (
+            <div className="md:col-span-1">
+              <DropDown
+                title="Tipo de calculo"
+                options={typeCalculeOptions}
+                value={typeCalculeOptions.find((a) => a.value === config.type_calcule) || null}
+                onSelect={(option) => handleSelectChange("type_calcule", option)}
+                helperText="Tipo de calculo que se realizara."
+              />
+            </div>
+          )}
         </div>
 
         {/* Transformación */}

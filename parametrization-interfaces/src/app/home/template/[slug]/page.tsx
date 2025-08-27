@@ -26,9 +26,11 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
   const [customer, setCustomer] = useState<Option | null>();
   const [extensionSelected, setExtensionSelected] = useState<Option | null>();
   const [firstLine, setFirstLine] = useState<Boolean>(false);
-  const [template, setTemplate] = useState<{ name?: string; extension?: string } | null>(null);
+  const [template, setTemplate] = useState<{ name?: string; extension?: string, first_line?: boolean } | null>(null);
   const [datatemplate, setDataTemplate] = useState<ItemType[]>([]);
+  const [datatemplateFirstLine, setDataTemplateFirstLine] = useState<ItemType[]>([]);
   const [selectedFields, setSelectedFields] = useState<any[]>([]);
+  const [selectedFieldsFirstLine, setSelectedFieldsFirstLine] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // Tipos de extensión de documento (opciones estáticas)
@@ -69,6 +71,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
       // Cargar columnas del template
       await fetchDataTemplates();
       setTemplate(response);
+      setFirstLine(response.first_line ?? false);
       setCustomer(customerData);
       setCustomers([customerData]);
       setExtensionSelected({ name: response.extension, value: response.extension });
@@ -86,7 +89,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
       const response = await apiGet(`/data-template/template/${slug}`);
       if (!response) throw new Error("Error al obtener los datos");
   
-      const formattedData = response
+      const formattedData = response.filter((item:any) => !item.first_line )
         .map((item: any) => ({
           ...item,
           id: item.id,
@@ -104,11 +107,37 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
             format_date: item.format_date,
             completed: item.complete_with,
             align: item.align,
+            first_line: item.first_line,
           },
         }))
         .sort((a: any, b: any) => a.index - b.index); // Ordena por index de menor a mayor
   
       setDataTemplate(formattedData);
+      const formattedDataFirstLine = response.filter((item:any) => item.first_line === true )
+        .map((item: any) => ({
+          ...item,
+          id: item.id,
+          index: item.index,
+          container: "file-structure",
+          valuesDefault: item.value_default,
+          config: {
+            name: item.name,
+            link_name: item.link_name,
+            default: item.default,
+            valuesDefault: item.value_default,
+            transformation: item.valuesTransform,
+            size: item.length,
+            type: item.type,
+            format_date: item.format_date,
+            completed: item.complete_with,
+            type_calcule: item.type_calcule,
+            align: item.align,
+            first_line: item.first_line,
+          },
+        }))
+        .sort((a: any, b: any) => a.index - b.index); // Ordena por index de menor a mayor
+  
+      setDataTemplateFirstLine(formattedDataFirstLine);
     } catch (err: any) {
       setError(err.message);
     }
@@ -128,18 +157,27 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
   const handleConfigSave = (fields: ItemType[]) => {
     setSelectedFields(fields);
   };
+  
+  // Guardar campos seleccionados
+  const handleConfigSaveFirstLinea = (fields: ItemType[]) => {
+    setSelectedFieldsFirstLine(fields);
+  };
 
   const handleSubmit = async () => {
     // construir data to send
+    const firstLinetest = [
+      ...selectedFieldsFirstLine,
+      ...selectedFields
+    ];
     const data = {
       name: template?.name,
       extension: template?.extension || extensionSelected?.value,
       status: true,
       default: false,
+      first_line: firstLine,
       customer: customer?.value,
-      fields: selectedFields,
+      fields: firstLinetest,
     };
-    console.log(data);
     showLoader();
     try {
       if (slug === "crear") {
@@ -254,7 +292,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
             <span className="rounded-full bg-white/70 px-3 py-1 text-xs text-primary-800">Opcional</span>
             </div>
             {FirstLineComponent ? (
-            <FirstLineComponent itemsInit={datatemplate} onConfigSave={handleConfigSave} />
+            <FirstLineComponent itemsInit={datatemplateFirstLine} onConfigSave={handleConfigSaveFirstLinea} />
             ) : (
             <p className="text-sm text-primary-800/80">(Componente <code>FirstLineComponent</code> no provisto)</p>
             )}

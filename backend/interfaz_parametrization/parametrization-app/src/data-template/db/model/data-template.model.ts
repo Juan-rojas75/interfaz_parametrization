@@ -43,6 +43,12 @@ export class DataTemplate {
   
   @Prop()
   align: string;
+  
+  @Prop()
+  type_calcule: string;
+  
+  @Prop()
+  first_line: boolean;
 
   @Prop({ type: [{ default: String, replace: String }] })
   valuesTransform: { default: string; replace: string }[];

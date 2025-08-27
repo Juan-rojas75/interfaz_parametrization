@@ -23,6 +23,9 @@ export class Template {
   @Prop()
   status: boolean;
   
+  @Prop()
+  first_line: boolean;
+  
   @Prop({ default: Date.now })
   createdAt: Date;
   

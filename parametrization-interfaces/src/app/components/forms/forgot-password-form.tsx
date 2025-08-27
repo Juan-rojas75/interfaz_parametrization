@@ -97,7 +97,7 @@ export function ForgotPasswordForm() {
       {/* Lado ilustración */}
       <section className="relative hidden items-center justify-center p-10 md:flex">
         <div className="relative z-10 max-w-md">
-          <Image src="/logos/1.png" width={80} height={80} alt="Logo" />
+          <Image src="/logos/nono-4.png" width={80} height={80} alt="Logo" />
           <h1 className="mt-6 text-3xl font-bold tracking-tight text-primary-950">¿Olvidaste tu contraseña?</h1>
           <p className="mt-2 text-base text-primary-900/80">Reestablece tu acceso usando tu correo.</p>
         </div>

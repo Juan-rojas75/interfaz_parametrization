@@ -26,6 +26,7 @@ export type ItemType = {
   container: string;
   valuesDefault?: Array<{ value: number; name: string }>;
   config?: FieldConfig;
+  first_line?: boolean;
 };
 
 const CONTAINERS = [
@@ -166,6 +167,7 @@ export function FirstLineComponent({ itemsInit, onConfigSave }: Readonly<DragDro
           ...newField,
           id: String(prev.length + 1),
           index: prev.length + 1,
+          first_line: true,
         },
       ];
     });
@@ -211,6 +213,7 @@ export function FirstLineComponent({ itemsInit, onConfigSave }: Readonly<DragDro
                 title={container.title}
                 items={itemsByContainer[container.id] || []}
                 showConfigButton
+                firstLine={true}
                 onConfigSave={handleConfigSave}
                 // Placeholders UX cuando está vacío
                 emptyState={(

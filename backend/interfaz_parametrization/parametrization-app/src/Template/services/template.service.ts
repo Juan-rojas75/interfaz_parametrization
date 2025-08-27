@@ -35,7 +35,7 @@ export class TemplateService {
         createDataTemplateDto.align = field.config.align;
         createDataTemplateDto.value_default = field.valuesDefault;
         createDataTemplateDto.valuesTransform = field.config.transformation;
-        console.log(createDataTemplateDto);
+        createDataTemplateDto.first_line = field.first_line ?? false;
         this.dataTemplateService.create(createDataTemplateDto);
       })
     }
@@ -78,6 +78,8 @@ export class TemplateService {
         createDataTemplateDto.align = field.config.align;
         createDataTemplateDto.value_default = field.valuesDefault;
         createDataTemplateDto.valuesTransform = field.config.transformation;
+        createDataTemplateDto.type_calcule = field.config.type_calcule ?? "";
+        createDataTemplateDto.first_line = field.first_line ?? false;
         this.dataTemplateService.create(createDataTemplateDto);
       })
     }

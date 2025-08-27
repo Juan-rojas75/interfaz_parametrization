@@ -65,11 +65,15 @@ class GenerateFileByFile:
             # OBTENER INFO BASE
             cliente = mongo.find_one("customers", {"_id": customer_id})
             template = mongo.find_one("templates", {"_id": record_id_obj})
-            dataTemplate = list(mongo.find_many_id("datatemplates", {"template": self.idTemplate}))
+            dataTemplateAll = list(mongo.find_many_id("datatemplates", {"template": self.idTemplate} ))
             # Ordenar por index
-            dataTemplate.sort(key=lambda x: x["index"])
+            dataTemplateAll.sort(key=lambda x: x["index"])
+            dataTemplate = [item for item in dataTemplateAll if item.get("first_line") == False]
+            dataTemplateFirstLine = [item for item in dataTemplateAll if item.get("first_line") == True]
 
             print("ENTRA A TXT")
+            print(dataTemplate)
+            print(dataTemplateFirstLine)
             # Procesar el archivo con pandas
             df = pd.read_excel(self.pathFile)
             data = df.to_dict(orient="records")

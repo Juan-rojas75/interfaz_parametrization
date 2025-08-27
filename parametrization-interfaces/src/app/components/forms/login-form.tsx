@@ -65,7 +65,7 @@ export function SigninForm() {
       {/* Panel info / branding */}
       <section className="relative hidden items-center justify-center p-10 md:flex">
         <div className="relative z-10 max-w-md">
-          <Image src="/logos/1.png" width={80} height={80} alt="Logo" />
+          <Image src="/logos/nono-4.png" width={80} height={80} alt="Logo" />
           <h1 className="mt-6 text-3xl font-bold tracking-tight text-primary-950">Bienvenido de nuevo</h1>
           <p className="mt-2 text-base text-primary-900/80">
             Inicia sesión para continuar y acceder a tus recursos.
@@ -83,7 +83,7 @@ export function SigninForm() {
         >
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Image src="/logos/3.png" width={48} height={48} alt="Logo" className="md:hidden" />
+              <Image src="/logos/nono-3.png" width={48} height={48} alt="Logo" className="md:hidden" />
               <h2 className="text-xl font-bold">Ingresar</h2>
             </div>
           </div>
