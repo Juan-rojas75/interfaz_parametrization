@@ -10,6 +10,7 @@ import Button from "@/app/shared/components/button/button.component";
 import { Option } from "@/app/shared/components/dropdown/interfaces/OptionItem.interface";
 import { useLoading } from "@/app/context/loaderContext";
 import { useToast } from "@/app/context/ToastContext";
+import { FirstLineComponent } from "./components/FirstLine/FirstLine.component";
 
 export default function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -22,8 +23,9 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
 
   // Estado
   const [customers, setCustomers] = useState<Option[]>([]);
-  const [customer, setCustomer] = useState<Option | undefined>();
-  const [extensionSelected, setExtensionSelected] = useState<Option | undefined>();
+  const [customer, setCustomer] = useState<Option | null>();
+  const [extensionSelected, setExtensionSelected] = useState<Option | null>();
+  const [firstLine, setFirstLine] = useState<Boolean>(false);
   const [template, setTemplate] = useState<{ name?: string; extension?: string } | null>(null);
   const [datatemplate, setDataTemplate] = useState<ItemType[]>([]);
   const [selectedFields, setSelectedFields] = useState<any[]>([]);
@@ -172,48 +174,137 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
   return (
     <div className="w-full">
       {
-        ( (template && customer && datatemplate) || slug === "crear" ) &&
+  ( (template && customer && datatemplate) || slug === "crear" ) &&
 
-            <article className="flex flex-col gap-10 p-8">
-              <section className="flex flex-col h-fit w-full gap-4 p-8 bg-secondary-200">
-                <h1 className="text-4xl text-left font-bold text-primary-950">Parametrización de interfaces</h1>
-              </section>
-              <section className="flex flex-col gap-4 justify-between w-full">
+      <article className="mx-auto flex w-full max-w-6xl flex-col gap-8 p-6 sm:p-8">
+        <section className="relative overflow-hidden rounded-2xl border border-secondary-200 bg-gradient-to-br from-secondary-100 to-secondary-200 p-6 sm:p-8">
+          <div className="flex flex-col gap-3">
+          <nav className="text-xs sm:text-sm text-primary-700/80" aria-label="Breadcrumb">
+          <ol className="flex items-center gap-2">
+          <li className="hover:underline cursor-default">Plantillas</li>
+          <li>•</li>
+          <li className="font-medium text-primary-900">Parametrización de interfaces</li>
+          </ol>
+          </nav>
+          <h1 className="text-left text-3xl sm:text-4xl font-bold text-primary-950 tracking-tight">Parametrización de interfaces</h1>
+          <p className="max-w-2xl text-sm text-primary-800/80">Define el cliente, asigna nombre y estructura el contenido del archivo. Los cambios se guardarán al confirmar.</p>
+          </div>
+        </section>
+      
+        <section className="grid gap-6 rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm sm:p-7">
+          <h2 className="text-lg font-semibold text-primary-950">Datos básicos</h2>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
                 <DropDown
                   title="Seleccione el cliente"
                   value={customer}
                   options={customers}
                   onSelect={(value) => setCustomer(value)}
                 />
-                <div>
-                  <h2 className="text-base font-semibold mb-1">Escribe el nombre</h2>
-                  <input
-                    type="text"
-                    name="name"
-                    value={template?.name || ""}
-                    className="w-full p-2 text-sm text-primary-950 border border-secondary-200 rounded-md max-w-screen-sm focus:outline-none"
-                    onChange={(e) => setTemplate((prev) => ({ ...prev, name: e.target.value }))}
-                  />
-                </div>
-                <DropDown
-                  title="Seleccione la extensión"
-                  value={extensionSelected}
-                  options={extension}
-                  onSelect={(value) => setExtensionSelected(value)}
+                <p className="text-xs text-primary-700/70">Este cliente determinará reglas y campos disponibles.</p>
+            </div>
+          </div>
+         <div className="flex flex-col gap-2">
+            <label htmlFor="name" className="text-sm font-medium text-primary-900">Nombre de la plantilla</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              placeholder="Ej. Integración BBVA – Nómina"
+              value={template?.name || ""}
+              className="w-full max-w-xl rounded-lg border border-secondary-200 bg-white p-2 text-sm text-primary-950 placeholder:text-primary-700/50 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              onChange={(e) => setTemplate((prev: any) => ({ ...prev, name: e.target.value }))}
+              />
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-primary-700/70">Usa un nombre claro y único.</p>
+                <span className="text-xs text-primary-700/60">{(template?.name?.length ?? 0)}/80</span>
+              </div>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <DropDown
+                title="Seleccione la extensión"
+                value={extensionSelected}
+                options={extension}
+                onSelect={(value) => setExtensionSelected(value)}
+              />
+
+            </div>
+          </div>
+          
+            {extensionSelected?.value === "txt" && (
+              <div className="flex items-center gap-3 rounded-xl border border-secondary-200 bg-secondary-50 p-3">
+                <label htmlFor="FirstLine" className="text-sm font-medium text-primary-900">¿Archivo con primera línea?</label>
+                <input
+                id="FirstLine"
+                type="checkbox"
+                checked={!!firstLine}
+                onChange={(e) => setFirstLine(e.target.checked)}
+                className="h-4 w-4 rounded-md border-secondary-300 text-primary-600 focus:ring-primary-500"
                 />
-              </section>
+              </div>
+            )}
+        </section>
 
-              <DragDropDemo itemsInit={datatemplate} onConfigSave={handleConfigSave} />
+        {/* Config primera línea */}
+          {extensionSelected?.value === "txt" && firstLine && (
+            <section className="rounded-2xl border border-secondary-200 bg-secondary-50 p-6">
+            <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-base font-semibold text-primary-950">Primera línea</h3>
+            <span className="rounded-full bg-white/70 px-3 py-1 text-xs text-primary-800">Opcional</span>
+            </div>
+            {FirstLineComponent ? (
+            <FirstLineComponent itemsInit={datatemplate} onConfigSave={handleConfigSave} />
+            ) : (
+            <p className="text-sm text-primary-800/80">(Componente <code>FirstLineComponent</code> no provisto)</p>
+            )}
+            </section>
+          )}
 
-              <Button
-                disabled={selectedFields.length === 0}
-                active={true}
-                severity="primary"
-                onClick={handleSubmit}
-              >
-                Guardar
-              </Button>
-            </article>
+        {/* Cuerpo del template */}
+        <section className="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-base font-semibold text-primary-950">Cuerpo del template</h3>
+            <span className="rounded-full bg-secondary-100 px-3 py-1 text-xs text-primary-800">Arrastra y suelta</span>
+          </div>
+            {DragDropDemo ? (
+            <DragDropDemo itemsInit={datatemplate} onConfigSave={handleConfigSave} />
+            ) : (
+            <p className="text-sm text-primary-800/80">(Componente <code>DragDropDemo</code> no provisto)</p>
+            )}
+        </section>
+
+        {/* Barra de acciones */}
+        <div className="sticky bottom-0 z-10 -mx-6 -mb-6 border-t border-secondary-200 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+          <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-4">
+            <div className="text-xs text-primary-800/70">
+            {selectedFields.length === 0 ? (
+            <span>Selecciona campos para habilitar el guardado.</span>
+            ) : (
+            <span>{selectedFields.length} campo{selectedFields.length>1?'s':''} seleccionado{selectedFields.length>1?'s':''}</span>
+            )}
+            </div>
+          {Button ? (
+          <Button
+          disabled={selectedFields.length === 0}
+          active={true}
+          severity="primary"
+          onClick={handleSubmit}
+          >
+          Guardar
+          </Button>
+          ) : (
+          <button
+            onClick={handleSubmit}
+            disabled={selectedFields.length === 0}
+            className="inline-flex items-center gap-2 rounded-xl border border-primary-500 bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:border-secondary-300 disabled:bg-secondary-200 disabled:text-secondary-600"
+            >
+            Guardar
+          </button>
+          )}
+          </div>
+        </div>
+      </article>
     }
     </div>
     

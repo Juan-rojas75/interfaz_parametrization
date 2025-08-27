@@ -76,8 +76,18 @@ export default function Customers() {
 
   return (
     <article className="flex flex-col min-h-screen w-full gap-10 h-full p-8">
-      <section className="flex flex-col h-fit w-full gap-4 p-8 bg-secondary-200">
-        <h1 className="text-4xl text-left font-bold text-primary-950">Clientes</h1>
+      <section className="relative rounded-2xl border border-secondary-200 bg-gradient-to-br from-secondary-100 to-secondary-200 p-6 sm:p-8">
+        <div className="flex flex-col gap-3">
+          <nav className="text-xs sm:text-sm text-primary-700/80" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2">
+            <li className="hover:underline cursor-default">Admin</li>
+            <li>•</li>
+            <li className="font-medium text-primary-900">Clientes</li>
+            </ol>
+          </nav>
+          <h1 className="text-left text-3xl sm:text-4xl font-bold text-primary-950">Listar clientes</h1>
+          <p className="max-w-2xl text-sm text-primary-800/80">Lista todos los clientes del sistema.</p>
+        </div>
       </section>
        <article className="flex flex-col items-center justify-center h-fit w-full gap-10">
         {(() => {

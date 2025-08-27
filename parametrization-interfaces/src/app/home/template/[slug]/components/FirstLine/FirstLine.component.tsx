@@ -38,7 +38,7 @@ type DragDropProps = {
   onConfigSave: (fields: ItemType[]) => void;
 };
 
-export function DragDropDemo({ itemsInit, onConfigSave }: Readonly<DragDropProps>) {
+export function FirstLineComponent({ itemsInit, onConfigSave }: Readonly<DragDropProps>) {
   // Estado
   const [items, setItems] = React.useState<ItemType[]>(() => itemsInit);
   const [activeId, setActiveId] = React.useState<string | null>(null);

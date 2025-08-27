@@ -11,6 +11,7 @@ interface ContainerProps {
   items: ItemType[]
   showConfigButton?: boolean
   onConfigSave: (fieldId: string, config: FieldConfig) => void; // Callback para enviar datos al padre
+  emptyState?: React.ReactNode; 
 }
 
 export function Container({ id, title, items, showConfigButton = false , onConfigSave}: ContainerProps) {
