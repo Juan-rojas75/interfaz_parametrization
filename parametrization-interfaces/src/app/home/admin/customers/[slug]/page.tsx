@@ -22,7 +22,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
 
   // Estado
   const [customer, setCustomer] = useState<CustomerInterface>({} as CustomerInterface);
-  const [documentTypeSelected, setDocumentTypeSelected] = useState<Option | undefined>();
+  const [documentTypeSelected, setDocumentTypeSelected] = useState<Option | null>();
 
     // Tipos de extensión de documento (opciones estáticas)
     const documentType: Option[] = useMemo(
