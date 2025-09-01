@@ -111,6 +111,7 @@ class GenerateFileByFile:
                     link_name = column["link_name"]
                     print(column["type_calcule"], flush=True)
                     print("-----", flush=True)
+                    print(data[link_name].count(), flush=True)
                     value = "12"
                     if(column["type_calcule"] == "sum"):
                         value = "1"
