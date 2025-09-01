@@ -74,9 +74,9 @@ class GenerateFileByFile:
             dataTemplate = [item for item in dataTemplateAll if item.get("first_line") == False]
             dataTemplateFirstLine = [item for item in dataTemplateAll if item.get("first_line") == True]
 
-            print(dataTemplate)
-            print("-----")
-            print(dataTemplateFirstLine)
+            print(dataTemplate, flush=True)
+            print("-----", flush=True)
+            print(dataTemplateFirstLine, flush=True)
             # Procesar el archivo con pandas
             df = pd.read_excel(self.pathFile)
             data = df.to_dict(orient="records")
@@ -115,9 +115,11 @@ class GenerateFileByFile:
                     value = "12"
                     if column["first_line"]:
                         if(column["type_calcule"] == "sum"):
-                            value = data[link_name].sum()
+                            value = "1"
+                            # value = data[link_name].sum()
                         elif(column["type_calcule"] == "count"):
-                            value = data[link_name].count()
+                            value = "2"
+                            # value = data[link_name].count()
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(value, column)
 
