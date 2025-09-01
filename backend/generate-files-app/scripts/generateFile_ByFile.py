@@ -60,7 +60,10 @@ class GenerateFileByFile:
     def generateFileByFileTXT(self):
         try:
             record_id_obj = ObjectId(self.idTemplate)  
-            customer_id = ObjectId(self.idCustomer)  
+            customer_id = ObjectId(self.idCustomer)
+
+            print(record_id_obj)
+            print(customer_id)  
 
             # OBTENER INFO BASE
             cliente = mongo.find_one("customers", {"_id": customer_id})
