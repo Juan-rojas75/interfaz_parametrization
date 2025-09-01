@@ -114,9 +114,9 @@ class GenerateFileByFile:
 
                     value = "12"
                     if column["first_line"]:
-                        if(type_calcule == "sum"):
+                        if(column["type_calcule"] == "sum"):
                             value = data[link_name].sum()
-                        elif(type_calcule == "count"):
+                        elif(column["type_calcule"] == "count"):
                             value = data[link_name].count()
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(value, column)
