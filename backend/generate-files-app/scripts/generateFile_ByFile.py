@@ -106,24 +106,24 @@ class GenerateFileByFile:
 
             # Primera linea
             rowInit = ""
-            # Agregar la primera linea si existe
-            if len(dataTemplateFirstLine) > 0:
+            # # Agregar la primera linea si existe
+            # if len(dataTemplateFirstLine) > 0:
                 
-                for column in dataTemplateFirstLine:
-                    link_name = column["link_name"]
+            #     for column in dataTemplateFirstLine:
+            #         link_name = column["link_name"]
 
-                    value = "12"
-                    # if first_line_column:
-                    #     if(type_calcule == "sum"):
-                    #         value = data[link_name].sum()
-                    #     elif(type_calcule == "count"):
-                    #         value = data[link_name].count()
-                    # Aplicar formateo según la configuración
-                    formatted_value = self.format_value_txt(value, column)
+            #         value = "12"
+            #         if first_line_column:
+            #             if(type_calcule == "sum"):
+            #                 value = data[link_name].sum()
+            #             elif(type_calcule == "count"):
+            #                 value = data[link_name].count()
+            #         # Aplicar formateo según la configuración
+            #         formatted_value = self.format_value_txt(value, column)
 
-                    # Guardar el valor formateado en la nueva fila
+            #         # Guardar el valor formateado en la nueva fila
                     
-                    rowInit = rowInit + str(formatted_value)
+            #         rowInit = rowInit + str(formatted_value)
             
             output_path = f"{cliente['name']}_{template['name']}.txt"
             return output_path , dfFinal , rowInit
