@@ -63,6 +63,7 @@ def upload_file():
     # Generar el archivo de salida
     generate_ = GenerateFileByFile(record_id, customer_id, file_path)
     if extension == "xlsx" : 
+        print("xlsx")
         output_filename, dfFinal = generate_.generateFileByFileExcel()
         
         # Reemplaza tanto NaT como NaN por None

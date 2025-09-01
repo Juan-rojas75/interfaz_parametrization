@@ -112,12 +112,12 @@ class GenerateFileByFile:
                 for column in dataTemplateFirstLine:
                     link_name = column["link_name"]
 
-                    value = ""
+                    value = "12"
                     if first_line_column:
                         if(type_calcule == "sum"):
-                            value = sum([float(item.get(dfFinal, 0)) for item in dfFinal])
+                            value = sum([float(item.get(data, 0)) for item in data])
                         elif(type_calcule == "count"):
-                            value = len(dfFinal)
+                            value = len(data)
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(value, column)
 
