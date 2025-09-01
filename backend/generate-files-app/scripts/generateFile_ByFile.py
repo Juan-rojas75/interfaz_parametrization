@@ -109,16 +109,15 @@ class GenerateFileByFile:
                 
                 for column in dataTemplateFirstLine:
                     link_name = column["link_name"]
-                    print(column, flush=True)
+                    print(column["type_calcule"], flush=True)
                     print("-----", flush=True)
                     value = "12"
-                    # if column["first_line"]:
-                    #     if(column["type_calcule"] == "sum"):
-                    #         value = "1"
-                    #         # value = data[link_name].sum()
-                    #     elif(column["type_calcule"] == "count"):
-                    #         value = "2"
-                    #         # value = data[link_name].count()
+                    if(column["type_calcule"] == "sum"):
+                        value = "1"
+                        # value = data[link_name].sum()
+                    elif(column["type_calcule"] == "count"):
+                        value = "2"
+                            # value = data[link_name].count()
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(value, column)
 
