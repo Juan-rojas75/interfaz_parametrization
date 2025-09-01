@@ -92,8 +92,8 @@ def upload_file():
         with open(output_path, 'w', encoding='utf-8') as f:
             if firstLineTxt != "" :
                 f.write(firstLineTxt + '\n')  # Escribe cada valor en una nueva línea
-                for index, row in dfFinal.iterrows():
-                    f.write(str(row["txt"]) + '\n')  # Escribe cada valor en una nueva línea
+            for index, row in dfFinal.iterrows():
+                f.write(str(row["txt"]) + '\n')  # Escribe cada valor en una nueva línea
         
         # # Inicia un hilo para eliminar los archivos después de un tiempo
         threading.Thread(target=delayed_delete, args=(file_path, output_path)).start()
