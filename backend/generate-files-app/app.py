@@ -80,6 +80,10 @@ def upload_file():
         response.headers["Content-Disposition"] = f'attachment; filename="{output_filename}"'  # 👈 Enviar el nombre del archivo
         return response
     elif (extension == "txt") :
+        print("entro en txt")
+        print(record_id)
+        print(customer_id)
+        print(file_path)
         output_filename, dfFinal, firstLineTxt = generate_.generateFileByFileTXT()
         # Guardar el archivo de salida en el servidor
         output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
