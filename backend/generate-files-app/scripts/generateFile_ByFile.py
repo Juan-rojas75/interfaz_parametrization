@@ -74,9 +74,6 @@ class GenerateFileByFile:
             dataTemplate = [item for item in dataTemplateAll if item.get("first_line") == False]
             dataTemplateFirstLine = [item for item in dataTemplateAll if item.get("first_line") == True]
 
-            print(dataTemplate, flush=True)
-            print("-----", flush=True)
-            print(dataTemplateFirstLine, flush=True)
             # Procesar el archivo con pandas
             df = pd.read_excel(self.pathFile)
             data = df.to_dict(orient="records")
@@ -84,12 +81,15 @@ class GenerateFileByFile:
             dfFinal_data = []  # Lista para almacenar las filas formateadas
 
             # Recorrer filas del DataFrame original
+            print(data, flush=True)
+            print("-----", flush=True)
             for row in data:
                 new_row = {}  # Diccionario para la nueva fila formateada
                 rowTotal = ""
                 for column in dataTemplate:
                     link_name = column["link_name"]
-
+                    print(column, flush=True)
+                    print("-----", flush=True)
                     # Obtener el valor original de la fila o None si no existe
                     original_value = row.get(link_name, "")
 

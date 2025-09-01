@@ -63,7 +63,6 @@ def upload_file():
     # Generar el archivo de salida
     generate_ = GenerateFileByFile(record_id, customer_id, file_path)
     if extension == "xlsx" : 
-        print("xlsx")
         output_filename, dfFinal = generate_.generateFileByFileExcel()
         
         # Reemplaza tanto NaT como NaN por None
@@ -81,10 +80,6 @@ def upload_file():
         response.headers["Content-Disposition"] = f'attachment; filename="{output_filename}"'  # 👈 Enviar el nombre del archivo
         return response
     elif (extension == "txt") :
-        print("entro en txt", flush=True)
-        print(record_id, flush=True)
-        print(customer_id, flush=True)
-        print(file_path, flush=True)
         output_filename, dfFinal, firstLineTxt = generate_.generateFileByFileTXT()
         # Guardar el archivo de salida en el servidor
         output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
