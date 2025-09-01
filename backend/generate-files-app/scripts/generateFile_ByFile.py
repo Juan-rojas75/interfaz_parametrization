@@ -71,6 +71,9 @@ class GenerateFileByFile:
             dataTemplate = [item for item in dataTemplateAll if item.get("first_line") == False]
             dataTemplateFirstLine = [item for item in dataTemplateAll if item.get("first_line") == True]
 
+            print(dataTemplate)
+            print("-----")
+            print(dataTemplateFirstLine)
             # Procesar el archivo con pandas
             df = pd.read_excel(self.pathFile)
             data = df.to_dict(orient="records")
