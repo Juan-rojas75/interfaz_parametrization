@@ -71,9 +71,6 @@ class GenerateFileByFile:
             dataTemplate = [item for item in dataTemplateAll if item.get("first_line") == False]
             dataTemplateFirstLine = [item for item in dataTemplateAll if item.get("first_line") == True]
 
-            print("ENTRA A TXT")
-            print(dataTemplate)
-            print(dataTemplateFirstLine)
             # Procesar el archivo con pandas
             df = pd.read_excel(self.pathFile)
             data = df.to_dict(orient="records")
@@ -82,7 +79,6 @@ class GenerateFileByFile:
 
             # Recorrer filas del DataFrame original
             for row in data:
-                print(row)
                 new_row = {}  # Diccionario para la nueva fila formateada
                 rowTotal = ""
                 for column in dataTemplate:
@@ -101,9 +97,30 @@ class GenerateFileByFile:
                 dfFinal_data.append(new_row)  # Agregar la nueva fila a la lista
             # Convertir la lista de diccionarios en DataFrame
             dfFinal = pd.DataFrame(dfFinal_data)
+
+            # Primera linea
+            rowInit = ""
+            # Agregar la primera linea si existe
+            if len(dataTemplateFirstLine) > 0:
+                
+                for column in dataTemplateFirstLine:
+                    link_name = column["link_name"]
+
+                    value = ""
+                    if first_line_column:
+                        if(type_calcule == "sum"):
+                            value = sum([float(item.get(dfFinal, 0)) for item in dfFinal])
+                        elif(type_calcule == "count"):
+                            value = len(dfFinal)
+                    # Aplicar formateo según la configuración
+                    formatted_value = self.format_value_txt(value, column)
+
+                    # Guardar el valor formateado en la nueva fila
+                    
+                    rowInit = rowInit + str(formatted_value)
             
             output_path = f"{cliente['name']}_{template['name']}.txt"
-            return output_path , dfFinal
+            return output_path , dfFinal , rowInit
 
         except Exception as e:
             print("Error:", e)
@@ -206,14 +223,12 @@ class GenerateFileByFile:
         default = config.get("default", "")
         
         if value is None or value == "":
-            print(default)
             if default is None:
                 value = ""
             else:
                 value = default
         if value == "nan":
             value = ""
-        print(value)
             
         if field_type == "auto-number":
             self.count += 1

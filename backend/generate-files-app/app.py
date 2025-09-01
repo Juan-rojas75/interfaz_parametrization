@@ -80,11 +80,13 @@ def upload_file():
         response.headers["Content-Disposition"] = f'attachment; filename="{output_filename}"'  # 👈 Enviar el nombre del archivo
         return response
     elif (extension == "txt") :
-        output_filename, dfFinal = generate_.generateFileByFileTXT()
+        output_filename, dfFinal, firstLineTxt = generate_.generateFileByFileTXT()
         # Guardar el archivo de salida en el servidor
         output_path = os.path.join(app.config["DOWNLOAD_FOLDER"], output_filename)
         
         with open(output_path, 'w', encoding='utf-8') as f:
+            if firstLineTxt != "" :
+                f.write(firstLineTxt + '\n')  # Escribe cada valor en una nueva línea
                 for index, row in dfFinal.iterrows():
                     f.write(str(row["txt"]) + '\n')  # Escribe cada valor en una nueva línea
         
