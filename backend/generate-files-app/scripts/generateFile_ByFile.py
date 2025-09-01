@@ -102,7 +102,7 @@ class GenerateFileByFile:
 
             # Primera linea
             rowInit = ""
-            print(data, flush=True)
+            print(df, flush=True)
             print("-----", flush=True)
             # Agregar la primera linea si existe
             if len(dataTemplateFirstLine) > 0:
@@ -111,7 +111,7 @@ class GenerateFileByFile:
                     link_name = column["link_name"]
                     print(column["type_calcule"], flush=True)
                     print("-----", flush=True)
-                    print(data["Id Proceso"].count(), flush=True)
+                    print(df["Id Proceso"].count(), flush=True)
                     value = "12"
                     if(column["type_calcule"] == "sum"):
                         value = "1"
