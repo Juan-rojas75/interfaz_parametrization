@@ -81,15 +81,11 @@ class GenerateFileByFile:
             dfFinal_data = []  # Lista para almacenar las filas formateadas
 
             # Recorrer filas del DataFrame original
-            print(data, flush=True)
-            print("-----", flush=True)
             for row in data:
                 new_row = {}  # Diccionario para la nueva fila formateada
                 rowTotal = ""
                 for column in dataTemplate:
                     link_name = column["link_name"]
-                    print(column, flush=True)
-                    print("-----", flush=True)
                     # Obtener el valor original de la fila o None si no existe
                     original_value = row.get(link_name, "")
 
@@ -106,20 +102,23 @@ class GenerateFileByFile:
 
             # Primera linea
             rowInit = ""
+            print(data, flush=True)
+            print("-----", flush=True)
             # Agregar la primera linea si existe
             if len(dataTemplateFirstLine) > 0:
                 
                 for column in dataTemplateFirstLine:
                     link_name = column["link_name"]
-
+                    print(column, flush=True)
+                    print("-----", flush=True)
                     value = "12"
-                    if column["first_line"]:
-                        if(column["type_calcule"] == "sum"):
-                            value = "1"
-                            # value = data[link_name].sum()
-                        elif(column["type_calcule"] == "count"):
-                            value = "2"
-                            # value = data[link_name].count()
+                    # if column["first_line"]:
+                    #     if(column["type_calcule"] == "sum"):
+                    #         value = "1"
+                    #         # value = data[link_name].sum()
+                    #     elif(column["type_calcule"] == "count"):
+                    #         value = "2"
+                    #         # value = data[link_name].count()
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(value, column)
 
