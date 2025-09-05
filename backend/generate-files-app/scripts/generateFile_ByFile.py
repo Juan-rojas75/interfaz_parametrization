@@ -107,11 +107,13 @@ class GenerateFileByFile:
                 
                 for column in dataTemplateFirstLine:
                     link_name = column["link_name"]
-                    value = "12"
+                    value = ""
                     if(column["type_calcule"] == "sum"):
                         value = df[link_name].sum()
                     elif(column["type_calcule"] == "count"):
                         value = df[link_name].count()
+                    else:
+                        value = df[link_name].iloc[0]
                     # Aplicar formateo según la configuración
                     formatted_value = self.format_value_txt(value, column)
 
