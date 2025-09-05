@@ -37,8 +37,7 @@ export default function UploadFile() {
 
   // accept dinámico
   const acceptAttr = useMemo(() => {
-    if (!expectedExt) return ".xlsx";
-    return `.${expectedExt}`;
+    return `.xlsx , .txt`;
   }, [expectedExt]);
 
   const revokeRef = useRef<string | null>(null);
