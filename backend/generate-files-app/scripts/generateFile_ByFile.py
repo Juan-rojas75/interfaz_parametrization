@@ -273,7 +273,7 @@ class GenerateFileByFile:
             else:
                 fill_char = complete_with
 
-            if field_type != "date" and field_type != "number" and field_type != "auto-number":
+            if field_type != "date" and field_type != "auto-number":
                 if field_type == "string-inverted":
                     # Tomar los últimos `length` caracteres
                     value = value[-length:]
@@ -284,6 +284,7 @@ class GenerateFileByFile:
                     elif align == "center":
                         value = value.center(length, fill_char)
                 else:
+                    value = str(value)
                     # Tomar los primeros `length` caracteres
                     value = value[:length]
                     if align == "left":
