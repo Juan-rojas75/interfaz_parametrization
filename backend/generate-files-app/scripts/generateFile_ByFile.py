@@ -274,7 +274,8 @@ class GenerateFileByFile:
                 value = value.__round__(0)
 
             if field_type != "date" and field_type != "auto-number":
-                value = str(value.replace(".0", ""))
+                value = str(value)
+                value = value.replace(".0", "")
                 if field_type == "string-inverted":
                     # Tomar los últimos `length` caracteres
                     value = value[-length:]
