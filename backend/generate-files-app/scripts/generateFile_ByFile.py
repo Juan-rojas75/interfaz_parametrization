@@ -273,6 +273,9 @@ class GenerateFileByFile:
             else:
                 fill_char = complete_with
 
+            if field_type == "number":
+                value = value.__round__(0)
+
             if field_type != "date" and field_type != "auto-number":
                 if field_type == "string-inverted":
                     # Tomar los últimos `length` caracteres
