@@ -60,10 +60,7 @@ class GenerateFileByFile:
     def generateFileByFileTXT(self):
         try:
             record_id_obj = ObjectId(self.idTemplate)  
-            customer_id = ObjectId(self.idCustomer)
-
-            print(record_id_obj)
-            print(customer_id)  
+            customer_id = ObjectId(self.idCustomer) 
 
             # OBTENER INFO BASE
             cliente = mongo.find_one("customers", {"_id": customer_id})
@@ -277,6 +274,7 @@ class GenerateFileByFile:
                 value = value.__round__(0)
 
             if field_type != "date" and field_type != "auto-number":
+                value = str(value.replace(".0", ""))
                 if field_type == "string-inverted":
                     # Tomar los últimos `length` caracteres
                     value = value[-length:]
